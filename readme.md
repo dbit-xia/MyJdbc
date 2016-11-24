@@ -7,3 +7,5 @@
 #####ExecuteDDL
 #####Commit
 #####Rollback
+#####setAutoCommit
+#####getAutoCommit
