@@ -231,14 +231,24 @@ public class jdbc {
 		                case "datetime":case "date":case "time":case "timestamp":
 		                	sb.append("\""+value.toString()+"\"");
 		                    break;
-		                case "varchar":case "text":case "nvarchar":case "char":case "nchar":
-		                	value=value.toString(); 
-		                	value=((String)value).replace("\\","\\\\");
+		                case "varchar":case "text":case "nvarchar":
+                            value=value.toString(); //.replaceFirst("\\s+$", "");
+                            if (value.equals(" ")) value=""; //ASE Tds空字符串会返回空格,所以特殊处理!!!
+                            value=((String)value).replace("\\","\\\\");
 //		                	value=((String)value).replace("{","\\{");
 //		                	value=((String)value).replace("[","\\[");
 //		                	value=((String)value).replace("}","\\}");
 //		                	value=((String)value).replace("[","\\[");
 //		                	value=((String)value).replace("/","\\/");
+                            value=((String)value).replace("\n","\\n");
+                            value=((String)value).replace("\r","\\r");
+                            value=((String)value).replace("\t","\\t");
+                            value=((String)value).replace("\"","\\\"");
+                            sb.append("\""+value+"\"");
+                            break;
+		                case "char":case "nchar":
+		                	value=value.toString();
+		                	value=((String)value).replace("\\","\\\\");
 		                	value=((String)value).replace("\n","\\n");
 		                	value=((String)value).replace("\r","\\r");
 		                	value=((String)value).replace("\t","\\t");
@@ -254,7 +264,7 @@ public class jdbc {
             sb.append("]");
         } while (rs.next()==true) ;
         sb.append("]");
-//        System.out.println(sb.toString());
+        //System.out.println(sb.toString());
         return sb.toString();
     }
 
