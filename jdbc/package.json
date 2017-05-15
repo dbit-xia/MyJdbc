@@ -1,0 +1,113 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "jdbc@^0.3.1",
+        "scope": null,
+        "escapedName": "jdbc",
+        "name": "jdbc",
+        "rawSpec": "^0.3.1",
+        "spec": ">=0.3.1 <0.4.0",
+        "type": "range"
+      },
+      "G:\\Program Files\\nodejs\\project\\runsa_interface"
+    ]
+  ],
+  "_cnpm_publish_time": 1463854702423,
+  "_from": "jdbc@>=0.3.1 <0.4.0",
+  "_id": "jdbc@0.3.1",
+  "_inCache": true,
+  "_location": "/jdbc",
+  "_nodeVersion": "6.2.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/jdbc-0.3.1.tgz_1463854699963_0.8139213302638382"
+  },
+  "_npmUser": {
+    "name": "jozias",
+    "email": "jason.g.ozias@gmail.com"
+  },
+  "_npmVersion": "3.9.2",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "jdbc@^0.3.1",
+    "scope": null,
+    "escapedName": "jdbc",
+    "name": "jdbc",
+    "rawSpec": "^0.3.1",
+    "spec": ">=0.3.1 <0.4.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/jdbc/-/jdbc-0.3.1.tgz",
+  "_shasum": "c13d48f2999520295a2c10d4263194635822b5c6",
+  "_shrinkwrap": null,
+  "_spec": "jdbc@^0.3.1",
+  "_where": "G:\\Program Files\\nodejs\\project\\runsa_interface",
+  "author": {
+    "name": "Jason Ozias",
+    "email": "jason.g.ozias@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/CraZySacX/node-jdbc/issues"
+  },
+  "dependencies": {
+    "async": "~2.0.0-rc.5",
+    "java": "^0.7.0",
+    "lodash": "~4.12",
+    "node-uuid": "~1.4",
+    "winston": "^2.2.0"
+  },
+  "description": "Node Module JDBC wrapper",
+  "devDependencies": {
+    "jshint": "~2.9",
+    "lolex": "^1.5.0",
+    "nodeunit": "~0.9",
+    "q": "^1.4.1"
+  },
+  "directories": {
+    "doc": ".",
+    "lib": "lib"
+  },
+  "dist": {
+    "shasum": "c13d48f2999520295a2c10d4263194635822b5c6",
+    "size": 22652,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/jdbc/download/jdbc-0.3.1.tgz"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "gitHead": "d44495de574249d83bc43d73eca098126e34886b",
+  "homepage": "https://github.com/CraZySacX/node-jdbc#readme",
+  "keywords": [
+    "node",
+    "jdbc",
+    "wrapper"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "jozias",
+      "email": "jason.g.ozias@gmail.com"
+    }
+  ],
+  "name": "jdbc",
+  "optionalDependencies": {},
+  "publish_time": 1463854702423,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/CraZySacX/node-jdbc.git"
+  },
+  "scripts": {
+    "lint": "jshint lib/**.js test/**.js",
+    "posttest": "bash bin/stopdbs",
+    "pretest": "bash bin/startdbs",
+    "test": "nodeunit test"
+  },
+  "version": "0.3.1"
+}

@@ -269,6 +269,7 @@ public class jdbc {
     }
 
     public static long setParams(PreparedStatement statement,Object data,Integer[] types,boolean isSelect) throws SQLException { //
+//    	System.out.print(types.toString());
     	Object[] rows=(Object[])data;
     	Object[] row;//=(Object[])rows[0];
     	
@@ -285,9 +286,13 @@ public class jdbc {
     		}
     		
     		for (int c=0;c<tempCount;c++){
+//    			System.out.print(row[c]);
+//    			System.out.print("\t");
     			if (row[c]==null){
     				statement.setNull(c+1,types[c]);
     			}else{
+    				//statement.setBigDecimal(c+1, (BigDecimal) row[c]);
+//    				statement.setDouble(c+1, (Double) row[c]);
     				statement.setObject(c+1, row[c],types[c],4); //值可以是字符串,types为BigDecimal, 定义最大保留4位小数
     			}
     		}
@@ -295,9 +300,13 @@ public class jdbc {
     			statement.setNull(i,types[i - 1]);
     		}
     		if (isSelect!=true) statement.addBatch(); //select时不能执行addbatch,否则jconn4会报错
+//    		System.out.print("\r\n");
     	}
     	
     	return 1;
     }
 
+    public static int executeUpdate(PreparedStatement statement) throws SQLException { //
+    	return statement.executeUpdate();
+    }
 }
