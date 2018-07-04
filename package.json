@@ -1,11 +1,16 @@
 {
-  "name": "MyJdbc",
-  "version": "0.0.1",
+  "name": "myjdbc",
+  "version": "2.1.2",
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "generic-pool": "^3.1.2",
-    "jdbc": "^0.4.0",
     "lodash": "^4.17.2",
-    "thenjs": "^2.0.4"
+    "moment":"*",
+    "thenjs": "^2.0.4",
+    "uuid": "*",
+    "winston": "*"
+  },
+  "devDependencies": {
+    "java": "^0.8.0"
   }
 }
