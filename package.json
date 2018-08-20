@@ -1,10 +1,10 @@
 {
   "name": "myjdbc",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "generic-pool": "^3.1.2",
-    "lodash": "^4.17.2",
+    "lodash": "^4.17.5",
     "moment":"*",
     "thenjs": "^2.0.4",
     "uuid": "*",
