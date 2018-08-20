@@ -1,5 +1,8 @@
 #MyJdbc
 
+### update:
+* model & connection 支持async+await
+
 # Quick Start
 
 ## Install 

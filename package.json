@@ -1,6 +1,6 @@
 {
   "name": "myjdbc",
-  "version": "2.1.2",
+  "version": "3.0.3",
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "generic-pool": "^3.1.2",
@@ -10,7 +10,13 @@
     "uuid": "*",
     "winston": "*"
   },
+  "homepage": "https://github.com/dbit-xia/MyJdbc/blob/master/readme.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dbit-xia/MyJdbc.git"
+  },
+  "license": "MIT",
   "devDependencies": {
-    "java": "^0.8.0"
+    "java": "^0.10.0"
   }
 }
