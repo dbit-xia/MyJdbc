@@ -3,12 +3,14 @@
  */
 const Thenjs=require('thenjs');
 process.chdir('../../../');
-var config=require('../../../data/conf_web').jdbc;
+var config=require('../../../data/conf');
 var myjdbc=require('../index');
-myjdbc(config.driver); //初始化驱动
-var pool=new myjdbc.Pool(config.list['runsa']);
+myjdbc(config.jdbc.driver); //初始化驱动
+var pool=new myjdbc.Pool(require(config.path.data+'/db/runsa'));
 
-Thenjs((cont)=>{
+Thenjs((cont)=> {
+    pool.open(cont);
+}).then((cont)=>{
     pool.getConnection(cont);
 }).then((cont,conn)=>{
     Thenjs((cont)=> {

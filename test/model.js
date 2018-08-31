@@ -2,12 +2,15 @@
  * Created by Dbit on 2017/9/9.
  */
 const Thenjs=require('thenjs');
-var config=require('../../../data/conf').jdbc;
+process.chdir('../../../');
+var config=require('../../../data/conf');
 var myjdbc=require('../index');
-myjdbc(config.driver); //初始化驱动
-var pool=new myjdbc.Pool(config.list['runsa']);
+myjdbc(config.jdbc.driver); //初始化驱动
+var pool=new myjdbc.Pool(require(config.path.data+'/db/runsa'));
 
 Thenjs((cont)=>{
+    pool.open(cont);
+}).then((cont)=>{
     pool.getConnection(cont);
 }).then((cont,conn)=> {
     Thenjs((cont)=> {
@@ -68,4 +71,4 @@ Thenjs((cont)=>{
             pool.releaseConn(conn, console.log);
         });
     });
-});
+}).fin((c,err,result)=>console.log(err,result));
