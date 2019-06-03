@@ -45,31 +45,31 @@ $ npm install java
     pool.getConnection((err,conn)=>{
     
         //查询结果输出为对象数组
-        conn.Query('select 1',(err,rows)=>{});
-        conn.Query('select 1 where 1=?',[1],(err,rows)=>{});
+        await conn.Query('select 1');
+        await conn.Query('select 1 where 1=?',[1]);
         
         //查询结果输出为二维数组
-        conn.QueryGrid('select 1',(err,rows)=>{});
-        conn.QueryGrid('select 1 where 1=?',[1],(err,rows)=>{});
+        await conn.QueryGrid('select 1');
+        await conn.QueryGrid('select 1 where 1=?',[1]);
         
         //Run DML
-        conn.Execute('delete table where 1=1',(err,rows)=>{});
-        conn.Execute('delete table where 1=?',[1],(err,rows)=>{});
-        conn.Execute(['delete table where ...','delete table where ...'],(err,rows)=>{});
+        await conn.Execute('delete table where 1=1');
+        await conn.Execute('delete table where 1=?',[1]);
+        await conn.Execute(['delete table where ...','delete table where ...']);
         
         //Run DDL
-        conn.ExecuteDDL('drop table ',(err,rows)=>{});
-        conn.ExecuteDDL(['drop table ','drop table '],(err,rows)=>{});
+        await conn.ExecuteDDL('drop table ');
+        await conn.ExecuteDDL(['drop table ','drop table ']);
         
         //Commit/Rollback transction
-        conn.Commit((err)=>{});
-        conn.Rollback((err)=>{});
+        await conn.Commit((err)=>{});
+        await conn.Rollback((err)=>{});
         
         //set/get autocommit mode
-        conn.setAutoCommit(true/false,(err)=>{});
-        conn.getAutoCommit((err,value)=>{});
+        await conn.setAutoCommit(true/false);
+        await conn.getAutoCommit((err,value)=>{});
         
-        pool.releaseConn(conn,(err)=>{});
+        pool.releaseConn(conn);
     });
 ```
 
@@ -86,26 +86,26 @@ $ npm install java
     * @param option {{select:String,where:{},[sort]:{},limit:[],[commit]:Boolean}}
     * @param callback
     */
-    studentModel.find({select:'id,name',where:{id:1}},console.log);
-    studentModel.findOne({select:'id,name',where:{id:1}},console.log);
+    await studentModel.find({select:'id,name',where:{id:1}});
+    await studentModel.findOne({select:'id,name',where:{id:1}});
     
     /**
     * @param option {{data:[{}],[fields]:[String],[values]:[String],[types]:[String],[commit]:Boolean}}
     * @param callback
     */
-    studentModel.insert({
+    await studentModel.insert({
         data:[{id:1,name:'hello'},{id:2,name:'world'}]
-    },console.log);
+    });
     
     /**
     * @param option {{set:{},where:{},[commit]:Boolean}}
     * @param callback
     */
-    studentModel.update({set:{name:'hi'},where:{id:1}},console.log);
+    await studentModel.update({set:{name:'hi'},where:{id:1}});
     
     /**
     * @param option {{where:{},[commit]:Boolean}}
     * @param callback
     */
-    studentModel.remove({where:{id:1}},console.log);
+    await studentModel.remove({where:{id:1}});
 ```

@@ -18,16 +18,71 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Date;
+
+
+//import com.alibaba.fastjson.JSON;
+//import com.alibaba.fastjson.JSONArray;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonValue;
+//import com.fasterxml.jackson.core.*;
+//import com.fasterxml.jackson.databind.*;
+
+//class Car {
+//	public String brand;
+//	public int doors;
+//}
 
 //import netscape.javascript.JSObject;
 
 public class jdbc {
 
-	public static void main(String[] args) throws SQLException, UnsupportedEncodingException {
+	public static void main(String[] args) throws SQLException, IOException {
 		
-		System.out.println(encode("\"\\12	3����aa��ABC&://-+ 1\n\r23","UTF_16BE")); 
+		System.out.println(encode("\"\\12	3夏子aa夏ABC&://-+ 1\n\r23","UTF_16BE")); 
+		
+//		String jsonArray = "[{\"brand\":\"ford\"}, {\"brand\":\"Fiat\"}]";
+
+//		ObjectMapper objectMapper = new ObjectMapper();
+//
+//		Car[] cars2 = objectMapper.readValue(jsonArray, Car[].class);
+//		String carJson =
+//		        "[[\"123\",null,456,null],[\"123\",null,456]]";
+//
+//		JsonFactory factory = new JsonFactory();
+//		JsonParser  parser  = factory.createParser(carJson);
+//		parser.enable(JsonParser.Feature.ALLOW_TRAILING_COMMA);
+//		parser.enable(JsonParser.Feature.ALLOW_MISSING_VALUES);
+		 
+//		int i=0;
+////		Car car = new Car();
+//		while(!parser.isClosed()){
+//		    JsonToken jsonToken = parser.nextToken();
+////		    System.out.println(parser.hasCurrentToken());
+////		    System.out.println(parser.getValueAsString());
+//		    i++;
+//		}
+		
+//		factory.
+//		System.out.println(i);
+//		System.out.println("car.doors = " + car.doors);
+		
+//		JSONArray value = JSON.parseArray("[[\"123\",undefined,456]]");
+//		System.out.println(((JSONArray) value.get(0)).get(1)==null);// new Date()为获取当前系统时间
+//		
+//		JsonArray value = Json.parse("[1,null,2]").asArray();
+//		System.out.println(value);// new Date()为获取当前系统时间
+//		try {
+//			System.in.read();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
 //		int a=1;
 //		Object temp=a;
 //		if (temp.getClass()==java.lang.Integer.class){
@@ -43,7 +98,7 @@ public class jdbc {
 //		System.out.println(object.toString());
 //		object.
 
-//		(2)����JSONObject��put������object�д�ֵ
+//		(2)调用JSONObject的put方法向object中传值
 //		[java] view plain copy
 //		object.put("name", "zhangsan");  
 //		object.put("age", 20);  
@@ -475,7 +530,7 @@ public class jdbc {
                 if (value==null){
                 	sb.append("null");
                 }else{
-//                	System.out.print(rsmd.getColumnTypeName(i+1)+',');
+                	//System.out.print(rsmd.getColumnTypeName(i+1)+',');
 	                switch (rsmd.getColumnTypeName(i+1).toLowerCase()){
 	                	case "varbinary":
 	                		sb.append("0");
@@ -483,9 +538,9 @@ public class jdbc {
 		                case "datetime":case "date":case "time":case "timestamp":
 		                	sb.append("\""+value.toString()+"\"");
 		                    break;
-		                case "varchar":case "text":case "nvarchar":
+		                case "varchar":case "text":case "nvarchar":case "clob":
                             value=value.toString(); //.replaceFirst("\\s+$", "");
-                            if (value.equals(" ")) value=""; //ASE Tds���ַ����᷵�ؿո�,�������⴦��!!!
+                            if (value.equals(" ")) value=""; //ASE Tds空字符串会返回空格,所以特殊处理!!!
 //                            value=((String)value).replace("\\","\\\\");
 ////		                	value=((String)value).replace("{","\\{");
 ////		                	value=((String)value).replace("[","\\[");
@@ -571,20 +626,151 @@ public class jdbc {
                         }
                         statement.setObject(c+1, tempDouble,types[c],4);
                     }else{
-                        statement.setObject(c+1, row[c],types[c],4); //ֵ�������ַ���,typesΪBigDecimal, ���������4λС��
+                        statement.setObject(c+1, row[c],types[c],4); //值可以是字符串,types为BigDecimal, 定义最大保留4位小数
                     }
                 }
     		}
     		for (int i=row.length+1;i<=fieldsCount;i++){
     			statement.setNull(i,types[i - 1]);
     		}
-    		if (isSelect!=true) statement.addBatch(); //selectʱ����ִ��addBatch,����jconn4�ᱨ��
+    		if (isSelect!=true) statement.addBatch(); //select时不能执行addBatch,否则jconn4会报错
 //    		System.out.print("\r\n");
     	}
     	
     	return 1;
     }
+	
+//	public static long setParamsByFastJson(PreparedStatement statement,String data,Integer[] types,boolean isSelect) throws SQLException { //
+////    	System.out.print(types.toString());
+//    	JSONArray rows=JSON.parseArray(data);
+//    	JSONArray row;//=(Object[])rows[0];
+//    	
+//    	int rowCount=rows.size();
+//    	int fieldsCount=types.length;
+//    	
+//    	int tempCount=0;
+//    	double tempDouble;
+//    	Class<?> tempType;
+//    	for (int r=0;r<rowCount;r++){
+//    		row=rows.getJSONArray(r);
+//    		if (row.size()<fieldsCount) {
+//    			tempCount=row.size();
+//    		} else {
+//    			tempCount=fieldsCount;
+//    		}
+//
+//    		for (int c=0;c<tempCount;c++){
+////    			System.out.println(c);
+////    			System.out.print("\t");
+//    			Object value=row.get(c);
+//    			if (value==null){
+//    				//System.out.println("setNull:"+(c+1)+types[c]);
+//    				statement.setObject(c+1, null,types[c],4); //statement.setNull(c+1,types[c]);
+//    			}else{
+//    				//statement.setBigDecimal(c+1, (BigDecimal) row[c]);
+//                    //statement.setDouble(c+1, (Double) row[c]);
+//                    if (types[c]==8) {
+//                        tempType=value.getClass();
+//                        //System.out.println(tempType);
+//                        if (tempType==java.lang.Integer.class){
+//                            tempDouble=Double.valueOf(value.toString());
+//                        }else if (tempType==java.lang.String.class){
+//                            tempDouble=Double.valueOf(value.toString());
+//                        }else if (tempType==java.lang.Boolean.class){
+//                            tempDouble=((boolean) value==true)?1:0;
+//                        }else{
+//                            tempDouble=((BigDecimal) value).doubleValue();
+//                            if (tempDouble<0) {
+//                                tempDouble=tempDouble - 0.000001;
+//                            }else{
+//                                tempDouble=tempDouble + 0.000001;
+//                            }
+//                            //System.out.print("double"+tempDouble);
+//                        }
+//                        statement.setObject(c+1, tempDouble,types[c],4);
+//                    }else{
+//                        statement.setObject(c+1, value,types[c],4); //值可以是字符串,types为BigDecimal, 定义最大保留4位小数
+//                    }
+//                }
+//    		}
+//    		for (int i=row.size()+1;i<=fieldsCount;i++){
+//    			statement.setNull(i,types[i - 1]);
+//    		}
+//    		if (isSelect!=true) statement.addBatch(); //select时不能执行addBatch,否则jconn4会报错
+////    		System.out.print("\r\n");
+//    	}
+//    	
+//    	return 1;
+//    }
+	
+	public static long setParams(PreparedStatement statement,String data,Integer[] types,boolean isSelect) throws SQLException {
 
+		JsonArray rows=Json.parse(data).asArray();
+
+//    	Object[] rows=(Object[])data;
+    	JsonArray row;//=(Object[])rows[0];
+    	
+    	int rowCount=rows.size();
+    	int fieldsCount=types.length;
+    	
+    	int tempCount=0;
+    	double tempDouble;
+    	int tempInt;
+    	String tempString;
+//    	Class<?> tempType;
+    	for (int r=0;r<rowCount;r++){
+    		row=rows.get(r).asArray();
+    		if (row.size()<fieldsCount) {
+    			tempCount=row.size();
+    		} else {
+    			tempCount=fieldsCount;
+    		}
+
+    		for (int c=0;c<tempCount;c++){
+//    			System.out.print(row.get(c).isNull());
+    			JsonValue value=row.get(c);
+    			if (value.isNull()){ //null
+    				//System.out.println("setNull:"+(c+1)+types[c]);
+    				statement.setObject(c+1, null,types[c],4); //statement.setNull(c+1,types[c]);
+    			}else{
+                    if (types[c]==8) { //Decimal
+                        if (value.isString()){
+                            tempDouble=Double.valueOf(value.asString());
+                        }else if (value.isBoolean()){
+                            tempDouble=(value.asBoolean()==true)?1:0;
+                        }else{
+                            tempDouble=(value.asDouble());
+                            if (tempDouble<0) {
+                                tempDouble=tempDouble - 0.000001;
+                            }else{
+                                tempDouble=tempDouble + 0.000001;
+                            }
+                        }
+                        statement.setObject(c+1, tempDouble,types[c],4);
+                    }else if (types[c]==4) { //Integer
+                        if (value.isString()){
+                        	tempInt=Integer.valueOf(value.asString());
+                        }else if (value.isBoolean()){
+                        	tempInt=(value.asBoolean()==true)?1:0;
+                        }else{
+                        	tempInt=(int) value.asDouble(); //避免double转integer报错
+                        }
+                        statement.setObject(c+1, tempInt,types[c],4);
+                    } else{ //String,Time,Date,DateTime
+                    	tempString=value.isString()?value.asString() :value.toString();
+                        statement.setObject(c+1, tempString,types[c],4); //值可以是字符串,types为BigDecimal, 定义最大保留4位小数
+                    }
+                }
+    		}
+    		for (int i=row.size()+1;i<=fieldsCount;i++){
+    			statement.setNull(i,types[i - 1]);
+    		}
+    		if (isSelect!=true) statement.addBatch(); //select时不能执行addBatch,否则jconn4会报错
+//    		System.out.print("\r\n");
+    	}
+    	
+    	return 1;
+	}
     public static int executeUpdate(PreparedStatement statement) throws SQLException { //
     	return statement.executeUpdate();
     }
