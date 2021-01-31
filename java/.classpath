@@ -3,5 +3,20 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/minimal-json-0.9.5.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="libs/commons-codec-1.12.jar"/>
+	<classpathentry kind="lib" path="libs/commons-collections4-4.3.jar"/>
+	<classpathentry kind="lib" path="libs/commons-compress-1.18.jar"/>
+	<classpathentry kind="lib" path="libs/commons-math3-3.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/curvesapi-1.06.jar"/>
+	<classpathentry kind="lib" path="libs/fastjson-1.2.58.jar"/>
+	<classpathentry kind="lib" path="libs/hutool-core-4.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/hutool-log-4.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/hutool-poi-4.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/poi-4.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/poi-ooxml-4.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/poi-ooxml-schemas-4.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/protobuf-java-3.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/xlsx-streamer-2.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/xmlbeans-3.1.0.jar"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>

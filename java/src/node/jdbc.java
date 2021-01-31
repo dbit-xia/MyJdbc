@@ -1,36 +1,53 @@
 package node;
 
 //import java.io.File;
+import java.io.FileInputStream;
 //import java.io.FileNotFoundException;
 //import java.io.FileOutputStream;
 
 import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 //import java.io.OutputStream;
 //import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
 //import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
+import java.sql.Statement;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Date;
+import java.util.List;
 
-
+import com.alibaba.fastjson.JSONArray;
 //import com.alibaba.fastjson.JSON;
 //import com.alibaba.fastjson.JSONArray;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 //import com.fasterxml.jackson.core.*;
 //import com.fasterxml.jackson.databind.*;
+
+import cn.hutool.poi.excel.BigExcelWriter;
+import cn.hutool.poi.excel.ExcelUtil;
+import org.apache.poi.ss.usermodel.Cell;
+
 
 //class Car {
 //	public String brand;
@@ -42,9 +59,9 @@ import com.eclipsesource.json.JsonValue;
 public class jdbc {
 
 	public static void main(String[] args) throws SQLException, IOException {
-		
-		System.out.println(encode("\"\\12	3夏子aa夏ABC&://-+ 1\n\r23","UTF_16BE")); 
-		
+
+		System.out.println(encode("\"\\12	3夏子aa夏ABC&://-+ 1\n\r23","UTF_16BE"));
+
 //		String jsonArray = "[{\"brand\":\"ford\"}, {\"brand\":\"Fiat\"}]";
 
 //		ObjectMapper objectMapper = new ObjectMapper();
@@ -57,7 +74,7 @@ public class jdbc {
 //		JsonParser  parser  = factory.createParser(carJson);
 //		parser.enable(JsonParser.Feature.ALLOW_TRAILING_COMMA);
 //		parser.enable(JsonParser.Feature.ALLOW_MISSING_VALUES);
-		 
+
 //		int i=0;
 ////		Car car = new Car();
 //		while(!parser.isClosed()){
@@ -66,14 +83,14 @@ public class jdbc {
 ////		    System.out.println(parser.getValueAsString());
 //		    i++;
 //		}
-		
+
 //		factory.
 //		System.out.println(i);
 //		System.out.println("car.doors = " + car.doors);
-		
+
 //		JSONArray value = JSON.parseArray("[[\"123\",undefined,456]]");
 //		System.out.println(((JSONArray) value.get(0)).get(1)==null);// new Date()为获取当前系统时间
-//		
+//
 //		JsonArray value = Json.parse("[1,null,2]").asArray();
 //		System.out.println(value);// new Date()为获取当前系统时间
 //		try {
@@ -90,9 +107,9 @@ public class jdbc {
 //			temp=((Integer) temp).doubleValue();
 //		}
 //		System.out.print(a);
-		
+
 		// TODO Auto-generated method stub
-//		JSObject object = JSObject 
+//		JSObject object = JSObject
 //				json_encode;
 //		object.setMember("a", 123);
 //		System.out.println(object.toString());
@@ -100,16 +117,16 @@ public class jdbc {
 
 //		(2)调用JSONObject的put方法向object中传值
 //		[java] view plain copy
-//		object.put("name", "zhangsan");  
-//		object.put("age", 20);  
-//		JSONArray skills = new JSONArray();  
-//		skills.put("java");  
-//		skills.put("php");  
-//		object.put("skills", skills);  
-		          
-//		System.out.println(object);  
+//		object.put("name", "zhangsan");
+//		object.put("age", 20);
+//		JSONArray skills = new JSONArray();
+//		skills.put("java");
+//		skills.put("php");
+//		object.put("skills", skills);
+
+//		System.out.println(object);
 	}
-	
+
     static BitSet dontNeedEncoding;
     static final int caseDiff = ('a' - 'A');
     static String dfltEncName = null;
@@ -124,7 +141,7 @@ public class jdbc {
 	 * Data characters that are allowed in a URI but do not have a
 	 * reserved purpose are called unreserved.  These include upper
 	 * and lower case letters, decimal digits, and a limited set of
-	 * punctuation marks and symbols. 
+	 * punctuation marks and symbols.
 	 *
 	 * unreserved  = alphanum | mark
 	 *
@@ -163,7 +180,7 @@ public class jdbc {
 	for (i = '0'; i <= '9'; i++) {
 	    dontNeedEncoding.set(i);
 	}
-	dontNeedEncoding.set(' '); 
+	dontNeedEncoding.set(' ');
 	dontNeedEncoding.set('~');
 	dontNeedEncoding.set('`');
 	dontNeedEncoding.set('!');
@@ -221,13 +238,13 @@ public class jdbc {
 //    public static String encode(String s) {
 //
 //		String str = null;
-//	
+//
 //		try {
 //		    str = encode(s, dfltEncName);
 //		} catch (UnsupportedEncodingException e) {
 //		    // The system should always have the platform default
 //		}
-//	
+//
 //		return str;
 //    }
 
@@ -244,7 +261,7 @@ public class jdbc {
      * incompatibilites.</em>
      *
      * @param   s   <code>String</code> to be translated.
-     * @param   enc   The name of a supported 
+     * @param   enc   The name of a supported
      *    <a href="../lang/package-summary.html#charenc">character
      *    encoding</a>.
      * @return  the translated <code>String</code>.
@@ -289,33 +306,33 @@ public class jdbc {
 		    /*
 		     * If this character represents the start of a Unicode
 		     * surrogate pair, then pass in two characters. It's not
-		     * clear what should be done if a bytes reserved in the 
+		     * clear what should be done if a bytes reserved in the
 		     * surrogate pairs range occurs outside of a legal
-		     * surrogate pair. For now, just treat it as if it were 
+		     * surrogate pair. For now, just treat it as if it were
 		     * any other character.
 		     */
 		    if (c >= 0xD800 && c <= 0xDBFF) {
 			/*
-			  System.out.println(Integer.toHexString(c) 
+			  System.out.println(Integer.toHexString(c)
 			  + " is high surrogate");
 			*/
 			if ( (i+1) < s.length()) {
 			    int d = (int) s.charAt(i+1);
 			    /*
-			      System.out.println("\tExamining " 
+			      System.out.println("\tExamining "
 			      + Integer.toHexString(d));
 			    */
 			    if (d >= 0xDC00 && d <= 0xDFFF) {
 				/*
-				  System.out.println("\t" 
-				  + Integer.toHexString(d) 
+				  System.out.println("\t"
+				  + Integer.toHexString(d)
 				  + " is low surrogate");
 				*/
 			        charArrayWriter.write(d);
 				i++;
 			    }
 			}
-		    } 
+		    }
 		    i++;
 		} while (i < s.length() && !dontNeedEncoding.get((c = (int) s.charAt(i))));
 
@@ -344,32 +361,32 @@ public class jdbc {
 
 	return (needToChange? out.toString() : s);
     }
-	
+
 	public static int hello(Object[] data) throws IOException{
 		System.out.println(1);
 		System.out.write(2);
 		System.in.read("123".getBytes());
 //		System.console();
 //		System.out.close();
-		
+
 		data[0]="123\n";
 		return 1;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static Object[][] getArray(int colcount){
 		System.out.println(colcount);
 		ArrayList<ArrayList<?>> resultList=new ArrayList<ArrayList<?>>();
-		
+
 		resultList.add(new ArrayList<Integer>());
 		resultList.add(new ArrayList<String>());
-		
+
 		((ArrayList<Integer>)resultList.get(0)).add(1);
 		((ArrayList<String>)resultList.get(0)).add("a");
 		((ArrayList<Integer>)resultList.get(1)).add(2);
 		((ArrayList<String>)resultList.get(1)).add("b");
-		
-		
+
+
 		Object[][] outTable = new Object[((ArrayList<String>)resultList.get(1)).size()][2];
 
 //		((ArrayList<String>)resultList.get(1)).toArray(outTable);
@@ -379,7 +396,7 @@ public class jdbc {
 		outTable[1][1]="b";
 		return outTable;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static Object[][] rs2table(ResultSet rs) throws SQLException { //
 
@@ -436,7 +453,7 @@ public class jdbc {
 	}
 
     public static Object[] rs2table2(ResultSet rs) throws SQLException { //
-		
+
         ResultSetMetaData rsmd = rs.getMetaData();//
         int fieldsCount=rsmd.getColumnCount();
 
@@ -447,9 +464,9 @@ public class jdbc {
         //}
         Object[] temp;
         Object value;
-        
+
         long starTime=System.currentTimeMillis();
-		 
+
         while(rs.next()==true){
             temp=new Object[fieldsCount];
             for (int i=0;i<fieldsCount;i++){
@@ -493,52 +510,75 @@ public class jdbc {
             //}
         }
 
-        
+
 		long endTime=System.currentTimeMillis();
 		long Time=endTime-starTime;
 		System.out.println(Time);
 
         return outTable;
     }
-    
-    public static String rs2table3(ResultSet rs) throws SQLException, IOException { //
+
+    public static String rs2table3(ResultSet rs,String option) throws SQLException, IOException { //
 //    	System.out.println("rs2table3");
+    	JsonObject optionObject=Json.parse(option).asObject();
+    	String filename=optionObject.getString("filename", "");
+
+    	FileWriter fileWriter = null;
+    	if (filename.isEmpty()==false) fileWriter = new FileWriter(filename);
+
         ResultSetMetaData rsmd = rs.getMetaData();//
         int fieldsCount=rsmd.getColumnCount();
 
         Object value="";
-        
+
         int rowCount=0;
 		StringBuilder sb=new StringBuilder();
-		
+
+//		Object[][] metadata=new Object[2][fieldsCount];
+
+		//[[列名],[类型],[数据]]
+		sb.append("[[");
+	    for (int i = 1; i <= fieldsCount; i++) {
+	    	if (i>1) sb.append(',');
+	    	sb.append("\""+rsmd.getColumnLabel(i)+"\"");
+	    }
+	    sb.append("],[");
+	    for (int i = 1; i <= fieldsCount; i++) {
+	    	if (i>1) sb.append(',');
+	    	sb.append(String.valueOf(rsmd.getColumnType(i)));
+	    }
+	    sb.append("],");
+
+	    StringBuilder rowsBuilder=new StringBuilder();
 		if (rs.next()==true) {
-			sb.append("[");
+			rowsBuilder.append("[");
 		} else {
-			return null;
+			sb.append("null]");
+			return sb.toString();
 		}
         do{
         	rowCount++;
         	if (rowCount==1){
-        		sb.append("[");	
+        		rowsBuilder.append("[");
         	}else{
-        		sb.append(",[");
+        		rowsBuilder.append(",[");
         	}
-        	
+
             for (int i=0;i<fieldsCount;i++){
-            	if (i!=0) sb.append(",");
+            	if (i!=0) rowsBuilder.append(",");
                 value=rs.getObject(i + 1);
                 if (value==null){
-                	sb.append("null");
+                	rowsBuilder.append("null");
                 }else{
                 	//System.out.print(rsmd.getColumnTypeName(i+1)+',');
 	                switch (rsmd.getColumnTypeName(i+1).toLowerCase()){
 	                	case "varbinary":
-	                		sb.append("0");
+	                		rowsBuilder.append("0");
 		                    break;
-		                case "datetime":case "date":case "time":case "timestamp":
-		                	sb.append("\""+value.toString()+"\"");
+		                case "datetime":case "date":case "time":case "timestamp":case "timestamptz":
+		                	rowsBuilder.append("\""+value.toString()+"\"");
 		                    break;
-		                case "varchar":case "text":case "nvarchar":case "clob":
+		                case "varchar":case "text":case "nvarchar":case "clob":case "bpchar":case "name":
                             value=value.toString(); //.replaceFirst("\\s+$", "");
                             if (value.equals(" ")) value=""; //ASE Tds空字符串会返回空格,所以特殊处理!!!
 //                            value=((String)value).replace("\\","\\\\");
@@ -551,8 +591,8 @@ public class jdbc {
 //                            value=((String)value).replace("\r","\\r");
 //                            value=((String)value).replace("\t","\\t");
 //                            value=((String)value).replace("\"","\\\"");
-//                            sb.append("\""+value+"\"");
-                            sb.append("\""+encode((String)value,"UTF_16BE")+"\"");
+//                            rowsBuilder.append("\""+value+"\"");
+                            rowsBuilder.append("\""+encode((String)value,"UTF_16BE")+"\"");
                             break;
 		                case "char":case "nchar":
 		                	value=value.toString();
@@ -561,19 +601,29 @@ public class jdbc {
 //		                	value=((String)value).replace("\r","\\r");
 //		                	value=((String)value).replace("\t","\\t");
 //		                	value=((String)value).replace("\"","\\\"");
-//		                	sb.append("\""+value+"\"");
-		                	sb.append("\""+encode((String)value,"UTF_16BE")+"\"");
+//		                	rowsBuilder.append("\""+value+"\"");
+		                	rowsBuilder.append("\""+encode((String)value,"UTF_16BE")+"\"");
 		                	break;
 		                default:
-		                	sb.append(value.toString());
+		                	rowsBuilder.append(value.toString());
 		                	break;
 	                }
                 }
             }
-            sb.append("]");
+            rowsBuilder.append("]");
         } while (rs.next()==true) ;
-        sb.append("]");
+        rowsBuilder.append("]");
+
         //System.out.println(sb.toString());
+        if (fileWriter!=null) {
+        	fileWriter.write(rowsBuilder.toString());
+        	fileWriter.flush();
+			fileWriter.close();
+			sb.append(rowCount);
+        }else {
+        	sb.append(rowsBuilder);
+        }
+        sb.append(']');
         return sb.toString();
     }
 
@@ -581,10 +631,10 @@ public class jdbc {
 //    	System.out.print(types.toString());
     	Object[] rows=(Object[])data;
     	Object[] row;//=(Object[])rows[0];
-    	
+
     	int rowCount=rows.length;
     	int fieldsCount=types.length;
-    	
+
     	int tempCount=0;
     	double tempDouble;
     	Class<?> tempType;
@@ -636,18 +686,18 @@ public class jdbc {
     		if (isSelect!=true) statement.addBatch(); //select时不能执行addBatch,否则jconn4会报错
 //    		System.out.print("\r\n");
     	}
-    	
+
     	return 1;
     }
-	
+
 //	public static long setParamsByFastJson(PreparedStatement statement,String data,Integer[] types,boolean isSelect) throws SQLException { //
 ////    	System.out.print(types.toString());
 //    	JSONArray rows=JSON.parseArray(data);
 //    	JSONArray row;//=(Object[])rows[0];
-//    	
+//
 //    	int rowCount=rows.size();
 //    	int fieldsCount=types.length;
-//    	
+//
 //    	int tempCount=0;
 //    	double tempDouble;
 //    	Class<?> tempType;
@@ -699,20 +749,30 @@ public class jdbc {
 //    		if (isSelect!=true) statement.addBatch(); //select时不能执行addBatch,否则jconn4会报错
 ////    		System.out.print("\r\n");
 //    	}
-//    	
+//
 //    	return 1;
 //    }
-	
-	public static long setParams(PreparedStatement statement,String data,Integer[] types,boolean isSelect) throws SQLException {
+
+	public static long setParams(PreparedStatement statement,String data,String option) throws SQLException {
 
 		JsonArray rows=Json.parse(data).asArray();
+		//types,isSelect,numberPrecision
+		JsonObject optionObject=Json.parse(option).asObject();
+
+		JsonArray jsonTypes=optionObject.get("types").asArray();
+		int[] types = new int[jsonTypes.size()];
+		for (int i=0;i<jsonTypes.size();i++) {
+			types[i]=jsonTypes.get(i).asInt();
+		}
+		boolean isSelect=optionObject.get("isSelect").asBoolean();
+		boolean numberPrecision=optionObject.get("numberPrecision").asBoolean();
 
 //    	Object[] rows=(Object[])data;
     	JsonArray row;//=(Object[])rows[0];
-    	
+
     	int rowCount=rows.size();
     	int fieldsCount=types.length;
-    	
+
     	int tempCount=0;
     	double tempDouble;
     	int tempInt;
@@ -740,10 +800,12 @@ public class jdbc {
                             tempDouble=(value.asBoolean()==true)?1:0;
                         }else{
                             tempDouble=(value.asDouble());
-                            if (tempDouble<0) {
-                                tempDouble=tempDouble - 0.000001;
-                            }else{
-                                tempDouble=tempDouble + 0.000001;
+                            if (numberPrecision == false) {
+                            	if (tempDouble<0) {
+                                    tempDouble=tempDouble - 0.000001;
+                                }else{
+                                    tempDouble=tempDouble + 0.000001;
+                                }
                             }
                         }
                         statement.setObject(c+1, tempDouble,types[c],4);
@@ -768,13 +830,421 @@ public class jdbc {
     		if (isSelect!=true) statement.addBatch(); //select时不能执行addBatch,否则jconn4会报错
 //    		System.out.print("\r\n");
     	}
-    	
+
     	return 1;
 	}
+
     public static int executeUpdate(PreparedStatement statement) throws SQLException { //
     	return statement.executeUpdate();
     }
-    
 
+    public static String rs2Excel(Connection conn, String filename, String path, String option) throws Exception {
+    	String fullPath = path + File.separator + filename;
+//     	System.out.println("rs2Excel:"+fullPath);
+    	BigExcelWriter writer = null;
+    	try {
+    		List<Sheet> sheets = parseJsonParam(option, Sheet.class);
+    		File file = new File(fullPath);
+
+    		if (file.exists()) {
+    			file.delete();
+    		}
+
+    		writer = ExcelUtil.getBigWriter(fullPath);
+
+    		int sheetIndex = 0;
+    		for (Sheet sheet : sheets) {
+    			Statement querySt = conn.createStatement();
+    			try {
+    				List<String> sheetHead = sheet.getTitle();
+        			String sheetName = sheet.getName();
+        			String serialName = sheet.getSerial();
+        			writer.setSheet(sheetIndex);
+        			writer.renameSheet(sheetName);
+        			sheetIndex++;
+
+        			String querySQL = sheet.getSql();
+        			ResultSet rs = querySt.executeQuery(querySQL);
+
+        			ResultSetMetaData rsmd = rs.getMetaData();
+        			int fieldsCount = rsmd.getColumnCount();
+
+        			java.util.List<Object> rowData;
+        			int rowIndex = 0;
+
+        			if (sheetHead == null || (sheetHead.size() == 0)) {
+        				List<String> columns = new ArrayList<String>();
+
+        				for (int i=0; i<fieldsCount; i++) {
+        					columns.add(rsmd.getColumnLabel(i + 1));
+        				}
+
+        				sheetHead = columns;
+
+        			}
+        			//标题序号名称
+        			if (serialName != null) {
+        				sheetHead.add(0, serialName);
+        			}
+
+        			writer.writeHeadRow(sheetHead);
+        			int titleHeight = sheet.getTitleHeight();
+
+        			if (titleHeight != 0) {
+        				writer.setRowHeight(0, titleHeight);
+        			}
+
+        			for (int i=0; i<sheetHead.size(); i++) {
+        				Cell cell = writer.getCell(i, 0);
+
+        				if (cell != null) {
+        					cell.getCellStyle().setWrapText(true);
+        				}
+        			}
+
+        			while(rs.next()) {
+        				rowData = new ArrayList<Object>();
+        				if (serialName != null) {
+        					rowData.add(rowIndex + 1);
+        				}
+
+        				for (int i=0; i<fieldsCount; i++) {
+        					rowData.add(rs.getObject(i + 1));
+        				}
+
+        				writer.writeRow(rowData);
+        				rowIndex++;
+        				//写入2000行释放一下资源
+        				if (rowIndex % 2000 == 0) {
+        					System.out.println("已写入了" + rowIndex + "行");
+        					System.gc();
+        				}
+
+        			}
+    			} finally {
+    				if (querySt != null) querySt.close();
+    			}
+
+    		}
+    	} finally {
+    		if (writer != null) writer.close();
+		}
+
+		return fullPath;
+	}
+
+	public static void createSqliteFile(Connection conn, String filePath, String options) throws Exception{
+		Statement targetStatement = null;
+		Statement sourceStatement = null;
+		PreparedStatement targetStatement2 = null;
+		Connection targetConn = null;
+		JsonObject optionsObj = Json.parse(options).asObject();
+		String dbms = optionsObj.getString("dbms","");
+//		System.out.println(dbms);
+		String tablesStr = optionsObj.getString("tables","");
+//		System.out.println(tablesStr);
+		try {
+			List<SqliteTable> tables = parseJsonParam(tablesStr, SqliteTable.class);
+			Class.forName("org.sqlite.JDBC");
+			File file = new File(filePath);
+
+			if (!file.exists()) {
+				boolean createNewFileResult = file.createNewFile();
+				if (!createNewFileResult) {
+					throw new Exception("create new File fail,please check permission");
+				}
+			}
+
+			targetConn = DriverManager.getConnection("jdbc:sqlite:" + filePath);
+			targetConn.setAutoCommit(false);
+			targetStatement = targetConn.createStatement();
+
+//            System.out.println(dbms);
+			if (dbms.equals("pgsql")) {
+// 			    System.out.println("createStatement(1003,1007)");
+				sourceStatement = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.FETCH_FORWARD); //ResultSet.TYPE_FORWARD_ONLY, ResultSet.FETCH_FORWARD
+				conn.setAutoCommit(false);
+				sourceStatement.setFetchSize(1000);
+			}else {
+// 			    System.out.println("createStatement()");
+				sourceStatement = conn.createStatement();
+			}
+
+			for (SqliteTable table : tables) {
+				String targetTableName = table.getTargetTableName();
+				List<String> targetFields = table.getTargetFields();
+				String querySourceDataSql = table.getQuerySourceDataSql();
+				String createTargetTableSql = table.getCreateTargetTableSql();
+
+				if (querySourceDataSql == null || "".equals(querySourceDataSql)) {
+					throw new Exception("querySourceDataSql can not be empty or null!");
+				}
+
+				if (targetTableName == null || "".equals(targetTableName)) {
+					throw new Exception("targetTableName can not be empty or null!");
+				}
+
+				if (createTargetTableSql == null || "".equals(createTargetTableSql)) {
+					throw new Exception("createTargetTableSql can not be empty or null!");
+				}
+
+				//create targetTable
+				String[] sqls = createTargetTableSql.split(";");
+
+				for (String sql : sqls) {
+					targetStatement.addBatch(sql);
+				}
+
+				targetStatement.executeBatch();
+				targetConn.commit();
+
+				//query data and save
+				StringBuilder sb1 = new StringBuilder("insert into" + " " + targetTableName + " " + "(");
+
+				for (int i=0; i<targetFields.size(); i++) {
+					if (i != targetFields.size()-1) {
+						sb1.append(targetFields.get(i)).append(",");
+					} else {
+						sb1.append(targetFields.get(i)).append(")").append(" ").append("values (");
+					}
+				}
+
+				for (int i=0; i<targetFields.size(); i++) {
+					if (i != targetFields.size()-1) {
+						sb1.append("?").append(",");
+					} else {
+						sb1.append("?").append(")");
+					}
+				}
+
+				targetStatement2 = targetConn.prepareStatement(sb1.toString());
+				ResultSet rs = sourceStatement.executeQuery(querySourceDataSql);
+
+                table.setCommitFrequency(1000);
+				int rowCount = 0;
+
+				while (rs.next()) {
+					rowCount++;
+					for (int i=0; i<targetFields.size(); i++) {
+						targetStatement2.setObject(i+1, rs.getObject(targetFields.get(i)));
+					}
+					targetStatement2.execute();
+
+					if (rowCount % table.getCommitFrequency() == 0) {
+					    System.out.println(rowCount);
+						targetConn.commit();
+//						System.gc();
+					}
+				}
+
+				targetConn.commit();
+			}
+		} finally {
+			if (targetStatement2 != null) {
+				targetStatement2.close();
+			}
+
+			if (sourceStatement != null) {
+				sourceStatement.close();
+			}
+
+			if (targetStatement != null) {
+				targetStatement.close();
+			}
+
+			if (targetConn != null) {
+				targetConn.close();
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> parseJsonParam(String jsonString, Class classz) throws Exception {
+		JSONArray array = JSONArray.parseArray(jsonString);
+		return array.toJavaList(classz);
+	}
+//
+//	public static boolean importExcelData(String filePath, String option) throws Exception {
+//		InputStream is = new FileInputStream(new File(filePath));
+//		List<Table> tables = parseJsonParam(option, Table.class);
+//		Workbook wk = StreamingReader.builder()
+//	               	.rowCacheSize(100)    // number of rows to keep in memory (defaults to 10)
+//	                .bufferSize(4096)     // buffer size to use when reading InputStream to file (defaults to 1024)
+//	                .open(is);            // InputStream or File for XLSX file (required)
+//
+//		for (org.apache.poi.ss.usermodel.Sheet sheet : wk){
+//            System.out.println(sheet.getSheetName());
+//            int count = 0;//获取表头列数
+//            List<String> header = new ArrayList<>();//获取表头
+//
+//            for (Row r : sheet) {
+//                if (r.getRowNum() == 0){
+//                    count = r.getLastCellNum();
+//                    for (Cell c : r) {
+//                        header.add(getCellValue(c));
+//                    }
+//                }else{
+//                    break;
+//                }
+//            }
+//
+//            List<Map<String,String>> dataMap = new ArrayList<>();
+//
+//            for (Row r : sheet) {
+//                if (r.getRowNum() > 0){
+//                    Map<String,String> dataMap1 = new HashMap<>();
+//
+//                    for (int i = 0; i < header.size(); i++) {
+//                        dataMap1.put(header.get(i),getCellValue(r.getCell(i)));
+//                    }
+//
+//
+//
+//                    dataMap.add(dataMap1);
+//                }
+//
+//            }
+//
+//            System.out.println(dataMap);
+//            System.out.println(dataMap.size());
+//        }
+//
+//		return false;
+//	}
+//
+//	public static String getCellValue(Cell cell){
+//        String cellValue = "";
+//        if (cell == null) {
+//            return "";
+//        }
+//        switch (cell.getCellTypeEnum()){
+//            case NUMERIC: //数字
+//                if (HSSFDateUtil.isCellDateFormatted(cell)){//日期
+//                    SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+//                    Date d = cell.getDateCellValue();
+//                    cellValue = sd.format(d);
+//                }else{
+//                    //转换格式
+//                    DataFormatter dataFormatter = new DataFormatter();
+//                    dataFormatter.addFormat("###########", null);
+//                    cellValue = dataFormatter.formatCellValue(cell);
+//                }
+//                break;
+//            case STRING: //字符串
+//                cellValue = String.valueOf(cell.getStringCellValue());
+//                break;
+//            case BOOLEAN: //Boolean
+//                cellValue = String.valueOf(cell.getBooleanCellValue());
+//                break;
+//            case FORMULA: //公式
+//                cellValue = String.valueOf(cell.getCellFormula());
+//                break;
+//            case BLANK: //空值
+//                cellValue = "";
+//                break;
+//            case ERROR: //故障
+//                cellValue = "非法字符";
+//                break;
+//            default:
+//                cellValue = "未知类型";
+//                break;
+//        }
+//        return cellValue;
+//    }
+	
+	//数据库连接对象、文件路径、数据分隔符、插入sql、文件编码、占位符列类型（Json数组）、行号位置（没有为-1）、设置行数为一批、提交模式（ONCE：只提交一次，WITHBATCH：处理一批，提交一次）
+    public static int txt2Table(Connection conn,String filename,String delimiter,String sql,String charset,String placeholderTypes,int lineNoPlace,int batchNum,String commitModel) throws Exception{
+    	 List<List<Object>> txtList = null;
+    	 List<Object> lineStrList = null;
+    	 File file = null;
+    	 BufferedReader br = null;
+    	 PreparedStatement ps = null;
+    	 String lineStr = "";
+	     Object[] objArr = null;
+	     String[] columnTypes = null;
+	     //记录行号
+	     int rowid = 0;
+ 
+    	 try {
+    		 	file = new File(filename);
+    		    br = new BufferedReader(
+    						 new InputStreamReader(
+    								 new FileInputStream(file), charset));
+    		     ps = conn.prepareStatement(sql);
+    		     ParameterMetaData pmd = ps.getParameterMetaData();
+    		     txtList = new ArrayList<List<Object>>();
+    		   //解析占位符列placeholderColumns
+    		     if(!placeholderTypes.equals("")) {
+    		    	 columnTypes = placeholderTypes.split(","); 
+    		     }
+    		     
+    			 //不为null或""时，继续读
+    			 while ((lineStr = br.readLine()) != null) {
+    				 if(lineStr.trim().isEmpty()) break;
+    				 rowid++;
+    				 //依据分隔符获取具体数据
+    				 objArr = lineStr.split(delimiter);
+    				 //防止获取元素下标超界
+    				 objArr = Arrays.copyOf(objArr, pmd.getParameterCount());
+    				 lineStrList = new ArrayList<Object>(Arrays.asList(objArr));
+    				 if(lineNoPlace != -1) {
+    					 //如果有行号，在行号位置设置行号
+    					 lineStrList.add(lineNoPlace, rowid); 
+    				 }
+    				 txtList.add(lineStrList);
+    		         //每读batchNum行插入一次数据
+    		         if(rowid % batchNum == 0) {
+    		        	 //调用方法插入数据,然后清空list
+    		             insertTable(ps, txtList, columnTypes, pmd, lineNoPlace);
+    		             txtList.clear();
+    		             if(commitModel.equals("WITHBATCH")) {
+    	    		    	 conn.commit(); 
+    	    		     }
+    		         }
+    			 }
+    			 
+    		     if(txtList.size()>0) {
+    		    	 //循环完成之后，提交最后一批不足batchNum条的数据
+    		    	 insertTable(ps, txtList, columnTypes, pmd, lineNoPlace);
+    		    	 if(commitModel.equals("WITHBATCH")) {
+        		    	 conn.commit(); 
+        		     }
+    		     }
+    		     if(commitModel.equals("ONCE")) {
+    		    	 conn.commit(); 
+    		     }
+		} catch (Exception e) {
+			throw e;
+		}finally {
+			if(ps != null) {
+				 ps.close();
+			 }
+			//先关闭流，再删除文件
+			if(br != null) {
+				 br.close();
+			 }
+			 file.delete();
+		}
+    	 return rowid;
+    }
+    //PreparedStatement对象、待插入的数据、占位符列类型、ParameterMetaData对象（用于查询占位符个数）、行号位置
+    public static void insertTable(PreparedStatement ps,List<List<Object>> list,String[] placeholderTypes,ParameterMetaData pmd,int lineNoPlace) throws Exception{
+    	int targetSqlType = 12;
+    	//循环遍历list，每次遍历取出的数据为txt文件一行的记录
+        for(List<Object> objArr : list){
+        	for(int i = 0; i < pmd.getParameterCount(); i++) {
+        		if(placeholderTypes!=null && i < placeholderTypes.length ) {
+        			targetSqlType = Integer.valueOf(placeholderTypes[i]);
+        		}
+        		if(lineNoPlace == i) {
+        			ps.setObject(i+1,  objArr.get(i),  4, 4);
+        		}else {
+        			ps.setObject(i+1,  objArr.get(i),  targetSqlType, 4);
+				}
+        	}
+			ps.addBatch();
+        }
+		ps.executeBatch();
+    }
 }
 

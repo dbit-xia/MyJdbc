@@ -1,13 +1,28 @@
 {
   "name": "myjdbc",
-  "version": "3.3.3",
+  "version": "5.0.2",
+  "files": [
+    "examples/*",
+    "java/*",
+    "lib/*",
+    "plugin/*",
+    "test/*",
+    ".npmignore",
+    "downJars.js",
+    "index.js",
+    "package.json",
+    "readme.md"
+  ],
   "dependencies": {
     "async": "^2.0.0-rc.3",
-    "generic-pool": "^3.1.2",
+    "axios": "^0.19.2",
+    "debug": "^4.1.1",
+    "java": "^0.12.0",
     "lodash": "^4.17.5",
     "moment": "*",
+    "nuid": "^1.1.4",
+    "runsa-generic-pool": "^3.7.1",
     "thenjs": "^2.0.4",
-    "uuid": "*",
     "winston": "*"
   },
   "homepage": "https://github.com/dbit-xia/MyJdbc/blob/master/readme.md",
@@ -16,7 +31,8 @@
     "url": "git://github.com/dbit-xia/MyJdbc.git"
   },
   "license": "MIT",
-  "devDependencies": {
-    "java": "^0.10.0"
+  "devDependencies": {},
+  "scripts": {
+    "postinstall": "node downJars.js"
   }
 }

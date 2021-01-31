@@ -1,2 +1,2 @@
-javac -encoding utf8 -cp libs/minimal-json-0.9.5.jar src/node/jdbc.java -d classes/
+javac -encoding utf8 -Djava.ext.dirs=./libs -d classes ./src/node/*.java
 pause
