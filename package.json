@@ -1,6 +1,6 @@
 {
   "name": "myjdbc",
-  "version": "5.0.3",
+  "version": "5.0.3-alpha",
   "files": [
     "examples/*",
     "java/*",
